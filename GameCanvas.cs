@@ -71,6 +71,26 @@ namespace MarketShopandRetailSystem
             Instance = this;
         }
 
+        void ResumeGameplay()
+        {
+            HeroPlayerScript.Instance.ActivatePlayerInputs();
+            HeroPlayerScript.Instance.ActivatePlayer();
+
+            CameraScript.Instance.enabled = true;
+
+            // Cursor hanya untuk PC
+            if (AdvancedGameManager.Instance.controllerType == ControllerType.PC)
+            {
+                Cursor.visible = false;
+                Cursor.lockState = CursorLockMode.Locked;
+            }
+            else
+            {
+                Cursor.visible = false;
+                Cursor.lockState = CursorLockMode.None;
+            }
+        }
+
         public void InputChange_TextShopName()
         {
             if(AdvancedGameManager.Instance.currentSelectedShop != null)
@@ -82,22 +102,28 @@ namespace MarketShopandRetailSystem
         public void ShowBills(string billType, int Amount)
         {
             Panel_Bill.SetActive(true);
-            Text_Bill_Title.text = "BILL: "+ billType.ToString();
-            Text_Bill_Amount.text = "PRICE: " + AdvancedGameManager.Instance.CurrencySymbol + Amount.ToString();
+            Text_Bill_Title.text = "BILL: " + billType;
+            Text_Bill_Amount.text = "PRICE: " + AdvancedGameManager.Instance.CurrencySymbol + Amount;
+
             HeroPlayerScript.Instance.DeactivatePlayer();
             CameraScript.Instance.enabled = false;
-            Cursor.visible = true;
-            Cursor.lockState = CursorLockMode.Confined;
+
+            // Cursor hanya untuk PC
+            if (AdvancedGameManager.Instance.controllerType == ControllerType.PC)
+            {
+                Cursor.visible = true;
+                Cursor.lockState = CursorLockMode.Confined;
+            }
         }
+
 
         public void HideBillPanel()
         {
             Panel_Bill.SetActive(false);
-            HeroPlayerScript.Instance.ActivatePlayer();
-            CameraScript.Instance.enabled = true;
-            Cursor.visible = false;
-            Cursor.lockState = CursorLockMode.Locked;
+            ResumeGameplay();
         }
+
+
 
         public void Click_Bill_Pay()
         {
